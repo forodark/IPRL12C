@@ -17,6 +17,8 @@
 #include "./finals/F1.c"
 #include "./finals/F2.c"
 #include "./finals/F3.c"
+#include "./finals/F4.c"
+#include "./finals/F5.c"
 #include "./finals/Bautista_FPQuiz.c"
 
 void exitProgram();
@@ -31,6 +33,8 @@ void showMenuM2();
 void showMenuF1();
 void showMenuF2();
 void showMenuF3();
+void showMenuF4();
+void showMenuF5();
 
 //I updated all the names in the menus so that its more descriptive of the functionality
 
@@ -165,8 +169,10 @@ void showMenuF() { //menu for finals exercises
 		printLine(0);
 	    printf("[1] File Processing\n");
 	    printf("[2] Recursion\n");
-	    printf("[3] File Processing Machine Problems\n");
+	    printf("[3] File Processing Machine Problems 1-2\n");
 	    printf("[4] File Processing Quiz\n");
+		printf("[5] File Processing Machine Problems 3-4\n");
+		printf("[6] File Processing Activity - July 6\n");
 		printf("[0] Return\n");
 	    printLine(0);
     	int choice;
@@ -184,6 +190,12 @@ void showMenuF() { //menu for finals exercises
 				break;
 			case 4:
 				FPQuiz();
+				break;
+			case 5:
+				showMenuF4();
+				break;
+			case 6:
+				showMenuF5();
 				break;
 			case 0:
 				showMenuMain();
@@ -640,10 +652,10 @@ void showMenuF3() { //menu for finals subcategory 3
     while(1) {
     	int choice;
     	printLine(0);
-    	printf("File Processing Machine Problems\n");
+    	printf("File Processing Machine Problems 1-2\n");
 		printLine(0);
-		printf("[1] Write A to Z to Text File\n");
-		printf("[2] Read Text File\n");    
+		printf("[1] MP1 - Write A to Z to Text File\n");
+		printf("[2] MP2 Read Text File\n");    
 		printf("[0] Return\n");
 		printLine(0);
 		input(Int, "Enter choice: ", &choice);
@@ -667,5 +679,73 @@ void showMenuF3() { //menu for finals subcategory 3
 		
 		waitEnter();
 		system("cls");
+	}
+}
+
+void showMenuF4() { //menu for finals subcategory 4
+	system("cls");
+    while(1) {
+		printLine(0);
+		printf("File Processing Machine Problems 3-4\n");
+		printLine(0);
+	    printf("[1] MP3 - Numbers n1 to n2\n");
+	    printf("[2] MP4 - Read File\n");
+		printf("[0] Return\n");
+	    printLine(0);
+    	int choice;
+		input(Int, "Enter choice: ", &choice);
+		printLine(0);
+		switch (choice) {
+			case 1:
+            	Finals_MP3();
+				printLine(0);
+				break;
+			case 2:
+            	Finals_MP4();
+				printLine(0);
+				break;
+			case 0:
+				showMenuF();
+				break;
+			default:
+				printColor(RED, "Invalid choice.\n");
+				waitEnter();
+		}
+	waitEnter();
+	system("cls");
+	}
+}
+
+void showMenuF5() { //menu for finals subcategory 5
+	system("cls");
+	while(1) {
+		printLine(0);
+		printf("File Processing Activity - July 6\n");
+		printLine(3);
+	    printf("[1] FPVowel - Count number of vowels\n");
+	    printf("[2] FPFileIdentical - Check if two files are identical\n");
+		printf("[0] Return\n");
+	    printLine(0);
+    	int choice;
+		input(Int, "Enter choice: ", &choice);
+		printLine(0);
+		switch (choice) {
+			case 1:
+            	FPVowel();
+				printLine(0);
+				break;
+			case 2:
+            	FPFileIdentical();
+				printLine(0);
+				break;
+			case 0:
+				showMenuF();
+				break;
+			default:
+				printColor(RED, "Invalid choice.\n");
+				waitEnter();
+		}
+	waitEnter();
+	system("cls");
 	}
 }
