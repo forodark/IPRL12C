@@ -83,7 +83,6 @@ void FPFileIdentical() {
     int identical = 1;
 
     while ((ch1 = fgetc(input)) != EOF && (ch2 = fgetc(input2)) != EOF) {
-        printf("%c %c\n", ch1, ch2);
         if (ch1 != ch2) {
             identical = 0;
             break;
