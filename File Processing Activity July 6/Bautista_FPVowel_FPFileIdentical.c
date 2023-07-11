@@ -83,17 +83,18 @@ void FPFileIdentical() {
     int identical = 1;
 
     while ((ch1 = fgetc(input)) != EOF && (ch2 = fgetc(input2)) != EOF) {
+        printf("%c %c\n", ch1, ch2);
         if (ch1 != ch2) {
             identical = 0;
             break;
         }
     }
 
-   if (identical && ch1 == EOF && ch2 == EOF) {
-        printColor(GREEN, "Files are identical.\n");
-    } else {
-        identical = 0;
+    if (!identical && !(ch1 == EOF && ch2 == EOF)) {
         printColor(RED, "Files are not identical.\n");
+    }
+    else {
+        printColor(GREEN, "Files are identical.\n");
     }
 
     fclose(input);
