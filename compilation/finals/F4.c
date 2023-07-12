@@ -47,7 +47,7 @@ void Finals_MP4() {
 	
 	if (input_file == NULL) {
 		printColor(RED, "Error: %s cannot be opened.\n", file_name);
-		main();
+		return;
 	}
 	
 	while ((n = fgetc(input_file)) != EOF) {
