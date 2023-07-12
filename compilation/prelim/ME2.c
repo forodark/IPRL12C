@@ -20,9 +20,8 @@ void ME2() {
             "For the first 200 messages, the charge\n"
             "is zero, any messages beyond that will\n"
             "charge Php 0.5 per message.\n"
-            "------------------------------------\n"
-            "Please input number of messages: ");
-    input(Int, "", &n);
+            "------------------------------------\n");
+    input(Int, "Please input number of messages: ", &n);
     
     printf("\n------------------------------------\n"
             "The charge incurred is: Php %.2f\n", getCharge(n));
