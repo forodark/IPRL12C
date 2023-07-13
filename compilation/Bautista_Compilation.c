@@ -15,7 +15,6 @@
 #include "./midterm/M1.c"
 #include "./midterm/M2.c"
 #include "./midterm/M3.c"
-#include "./midterm/Bautista_ATMv4.c"
 
 #include "./finals/F1.c"
 #include "./finals/F2.c"
@@ -44,9 +43,6 @@ void showMenuF5();
 
 //I updated all the names in the menus so that its more descriptive of the functionality
 
-char original_dir[128];
-
-
 int main() { //main function only calls the main menu, the main loop is located there
 	getcwd(original_dir, sizeof(original_dir)); //save current dir
 
@@ -57,7 +53,7 @@ int main() { //main function only calls the main menu, the main loop is located 
 void exitProgram() { //this is the only function that actually exits the program, every other exits from programs compiled are replaced with a return (back)
 	system("cls");
 	printf("Exiting Program...\n");
-	exit (0);	
+	exit(0);	
 }
 
 void showMenuMain() {//main menu contains the main screen where you can branch out from
@@ -166,7 +162,7 @@ void showMenuM() { //menu for midterm exercises
 			case 3:
 				showMenuM3();
 			case 4:
-				ATMv4();
+				runProgram("midterm/ATMv4/", "Bautista_ATMv4.exe");
 				break;
 			case 0:
 				showMenuMain();
@@ -217,10 +213,7 @@ void showMenuF() { //menu for finals exercises
 				showMenuF5();
 				break;
 			case 7:
-				chdir("finals/ATMv7.2/"); 
-				system("cls");
-				system("Bautista_ATMv7.2.exe");
-				chdir(original_dir);
+				runProgram("finals/ATMv7.2/", "Bautista_ATMv7.2.exe");
 				break;
 			case 0:
 				showMenuMain();

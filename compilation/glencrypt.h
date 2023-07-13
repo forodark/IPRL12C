@@ -8,6 +8,7 @@
 #include <time.h>
 #include <stdarg.h>
 #include <windows.h>
+#include <unistd.h>
 
 #define ALPHANUM "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 #define NUMERIC "0123456789."
@@ -365,6 +366,43 @@ void inputCustom(char *prompt, void* output, char *accepted) {
     }
 }
 
+
+char original_dir[256];
+
+void runProgram(char* path, char* program) {
+    getcwd(original_dir, sizeof(original_dir));
+    chdir(path); 
+    system("cls");
+    system(program);
+    system("cls");
+    chdir(original_dir);
+}
+
+struct menu_option {
+    char *text;
+    void (*function)();
+};
+
+#define END_MENU {NULL, NULL}
+
+void showMenu(char *title, struct menu_option* options) {
+    int i = 0;
+    int choice;
+
+    printf("%s\n", title);
+    printLine(0);
+    while (options[i].text != NULL) {
+        printf("[%d] %s\n", i+1, options[i].text);
+        i++;
+    }
+    printf("[0] Return\n");
+    printLine(0);
+    input(Int, "Enter choice: ", &choice);
+    if(choice == 0) {
+        return;
+    }
+    options[choice-1].function();
+}
 
 
 
