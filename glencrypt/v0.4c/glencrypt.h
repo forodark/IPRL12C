@@ -384,6 +384,7 @@ typedef struct {
 } menu;
 
 #define END_MENU {NULL, NULL}
+#define SUBTITLE NULL
 
 int menu_return = 0;
 void showMenu(char *title, menu* options) {
@@ -393,9 +394,17 @@ void showMenu(char *title, menu* options) {
         printf("%s\n", title);
         printLine(0);
         int i = 0;
-        while (options[i].text != NULL) {
-            printf("[%d] %s\n", i+1, options[i].text);
-            i++;
+        int sub_count = 0;
+        while (options[i+sub_count].text != NULL) {
+            if(options[i+sub_count].function != NULL) {
+                printf("[%d] %s\n", i+1, options[i+sub_count].text);
+                i++;
+            }
+            else {
+                if(i != 0) {printLine(0);}
+                printf(" %s\n", options[i+sub_count].text);
+                sub_count++;
+            }
         }
         printf("[0] Return\n");
         printLine(0);
