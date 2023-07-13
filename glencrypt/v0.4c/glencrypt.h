@@ -386,22 +386,26 @@ struct menu_option {
 #define END_MENU {NULL, NULL}
 
 void showMenu(char *title, struct menu_option* options) {
-    int i = 0;
-    int choice;
-
-    printf("%s\n", title);
-    printLine(0);
-    while (options[i].text != NULL) {
-        printf("[%d] %s\n", i+1, options[i].text);
-        i++;
+    while(1) {
+        system("cls");
+        printf("%s\n", title);
+        printLine(0);
+        int i = 0;
+        while (options[i].text != NULL) {
+            printf("[%d] %s\n", i+1, options[i].text);
+            i++;
+        }
+        printf("[0] Return\n");
+        printLine(0);
+        int choice;
+        input(Int, "Enter choice: ", &choice);
+        if(choice == 0) {
+            return;
+        }
+        options[choice-1].function();
+        waitEnter();
+        system("cls");
     }
-    printf("[0] Return\n");
-    printLine(0);
-    input(Int, "Enter choice: ", &choice);
-    if(choice == 0) {
-        return;
-    }
-    options[choice-1].function();
 }
 
 
