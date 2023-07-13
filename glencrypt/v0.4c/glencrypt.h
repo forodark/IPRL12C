@@ -385,6 +385,7 @@ typedef struct {
 
 #define END_MENU {NULL, NULL}
 
+int menu_return = 0;
 void showMenu(char *title, menu* options) {
     while(1) {
         system("cls");
@@ -401,6 +402,7 @@ void showMenu(char *title, menu* options) {
         int choice;
         input(Int, "Enter choice: ", &choice);
         if(choice == 0) {
+            menu_return = 1;
             return;
         }
         if(choice > i || choice < 0) {
@@ -410,8 +412,11 @@ void showMenu(char *title, menu* options) {
             continue;
         }
         options[choice-1].function();
-        waitEnter();
-        system("cls");
+        if(menu_return != 1) {
+            waitEnter();
+            system("cls");
+        }
+        menu_return = 0;
     }
 }
 
