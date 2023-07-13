@@ -395,8 +395,12 @@ void showMenu(char *title, struct menu_option* options) {
         printf("[%d] %s\n", i+1, options[i].text);
         i++;
     }
+    printf("[0] Return\n");
     printLine(0);
     input(Int, "Enter choice: ", &choice);
+    if(choice == 0) {
+        return;
+    }
     options[choice-1].function();
 }
 
