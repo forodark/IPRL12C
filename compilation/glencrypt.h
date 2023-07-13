@@ -29,6 +29,58 @@ typedef enum {
 } DataType;
 
 
+
+
+//COSMETIC STUFFS
+void printLine(int type) {
+	switch(type) {
+		case 0: //normal
+			printf("---------------------------------\n");
+			break;
+		case 1: //fancy
+			printf("->->-~-~-~-=-=-=-=-=-=-~-~-~-<-<-\n");
+			break;
+		case 2: //long
+			printf("------------------------------------------------------------------\n");
+			break;
+		default:
+			printf("---------------------------------\n");
+			break;
+	}
+}
+#define BLACK 0
+#define RED FOREGROUND_RED | FOREGROUND_INTENSITY
+#define GREEN FOREGROUND_GREEN | FOREGROUND_INTENSITY
+#define BLUE FOREGROUND_BLUE | FOREGROUND_INTENSITY
+#define YELLOW FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY
+#define MAGENTA FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY
+#define CYAN FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY
+#define WHITE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY
+
+void printColor(int textColor, const char* format, ...)
+{
+    // Get the current console handle
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    // Store the current console attributes
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    WORD originalAttrs = consoleInfo.wAttributes;
+
+    // Set the text color
+    SetConsoleTextAttribute(hConsole, textColor);
+    
+    // Print the formatted text
+    va_list args;
+    va_start(args, format);
+    vprintf(format, args);
+    va_end(args);
+    
+    // Reset the color
+    SetConsoleTextAttribute(hConsole, originalAttrs);
+}
+
+
 //MISC
 
 int getCharPos(char* str, char ch) {
@@ -48,6 +100,19 @@ void waitEnter() {
 
     }
 }
+
+void invalidChoice() {
+    printColor(RED,"Invalid choice.\n");
+    printLine(0);
+    waitEnter();
+}
+
+void exitProgram() { 
+	system("cls");
+	printf("Exiting Program...\n");
+	exit(0);	
+}
+
 
 
 //Encryption
@@ -129,57 +194,6 @@ char* generateKey(int length) {
     return key;
 }
 
-
-
-
-//COSMETIC STUFFS
-void printLine(int type) {
-	switch(type) {
-		case 0: //normal
-			printf("---------------------------------\n");
-			break;
-		case 1: //fancy
-			printf("->->-~-~-~-=-=-=-=-=-=-~-~-~-<-<-\n");
-			break;
-		case 2: //long
-			printf("------------------------------------------------------------------\n");
-			break;
-		default:
-			printf("---------------------------------\n");
-			break;
-	}
-}
-#define BLACK 0
-#define RED FOREGROUND_RED | FOREGROUND_INTENSITY
-#define GREEN FOREGROUND_GREEN | FOREGROUND_INTENSITY
-#define BLUE FOREGROUND_BLUE | FOREGROUND_INTENSITY
-#define YELLOW FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY
-#define MAGENTA FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY
-#define CYAN FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY
-#define WHITE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY
-
-void printColor(int textColor, const char* format, ...)
-{
-    // Get the current console handle
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-    // Store the current console attributes
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    WORD originalAttrs = consoleInfo.wAttributes;
-
-    // Set the text color
-    SetConsoleTextAttribute(hConsole, textColor);
-    
-    // Print the formatted text
-    va_list args;
-    va_start(args, format);
-    vprintf(format, args);
-    va_end(args);
-    
-    // Reset the color
-    SetConsoleTextAttribute(hConsole, originalAttrs);
-}
 
 //CHECKS
 
@@ -378,32 +392,156 @@ void runProgram(char* path, char* program) {
     chdir(original_dir);
 }
 
-struct menu_option {
-    char *text;
+typedef struct {
+    char* text;
     void (*function)();
-};
+} menu;
 
 #define END_MENU {NULL, NULL}
+#define SUBTITLE NULL
+#define LINE {"", NULL}
 
-void showMenu(char *title, struct menu_option* options) {
-    int i = 0;
-    int choice;
-
-    printf("%s\n", title);
-    printLine(0);
-    while (options[i].text != NULL) {
-        printf("[%d] %s\n", i+1, options[i].text);
-        i++;
+int menu_return = 0;
+void showMenu(char *title, menu* options) {
+    while(1) {
+        system("cls");
+        printLine(0);
+        printf("%s\n", title);
+        printLine(0);
+        int i = 0;
+        int sub_count = 0;
+        while (options[i+sub_count].text != NULL) {
+            if(options[i+sub_count].function != NULL) {
+                printf("[%d] %s\n", i+1, options[i+sub_count].text);
+                i++;
+            }
+            else {
+                if(i != 0 || !strcmp(options[i+sub_count].text, "")) {printLine(0);}
+                if(strcmp(options[i+sub_count].text, "")) {
+                    printf("%s\n", options[i+sub_count].text);
+                }
+                sub_count++;
+            }
+        }
+        printf("[0] Return\n");
+        printLine(0);
+        int choice;
+        input(Int, "Enter choice: ", &choice);
+        if(choice == 0) {
+            menu_return = 1;
+            return;
+        }
+        if(choice > i || choice < 0) {
+            printColor(RED,"Invalid choice.\n");
+            printLine(0);
+            waitEnter();
+            continue;
+        }
+        system("cls");
+        options[choice-1+sub_count].function();
+        if(menu_return != 1) {
+            waitEnter();
+            system("cls");
+        }
+        menu_return = 0;
     }
-    printf("[0] Return\n");
-    printLine(0);
-    input(Int, "Enter choice: ", &choice);
-    if(choice == 0) {
-        return;
-    }
-    options[choice-1].function();
 }
 
+#define PAGE_LENGTH 7
+#define END_PAGE_MENU NULL
+
+typedef struct {
+    menu *options;
+} page_menu;
+
+void showPageMenu(char *title, page_menu* page) {
+    int current_page = 0;
+    int page_count = 0;
+    while (page[page_count].options != NULL) {
+        page_count++;
+    }
+    while(1) {
+        system("cls");
+        printLine(0);
+        printf("%s [%d/%d]\n", title, current_page+1, page_count);
+        printLine(0);
+        int i = 0;
+        int sub_count = 0;
+        while (page[current_page].options[i+sub_count].text != NULL) {
+            if(i >= PAGE_LENGTH) {
+                printColor(RED, "ERROR: Page Overflow.\n");
+                return;
+            }
+
+            if(page[current_page].options[i+sub_count].function != NULL) {
+                printf("[%d] %s\n", i+1, page[current_page].options[i+sub_count].text);
+                i++;
+            }
+            else {
+                if(i != 0 || !strcmp(page[current_page].options[i+sub_count].text, "")) {printLine(0);}
+                if(strcmp(page[current_page].options[i+sub_count].text, "")) {
+                    printf("%s\n", page[current_page].options[i+sub_count].text);
+                }
+                sub_count++;
+            }
+        }
+        printLine(0);
+		if (current_page > 0) {
+			printf("[8] Previous Page\n");
+		}
+		if (current_page != page_count-1) {
+			printf("[9] Next Page\n");
+		}
+        printf("[0] Return\n");
+        printLine(0);
+        int choice;
+        input(Int, "Enter choice: ", &choice);
+        switch(choice) {
+            case 8: 
+                if (current_page > 0) {	
+                    current_page--;				
+                    continue;
+                }
+                else {
+                    invalidChoice();
+                    continue;
+                }
+            case 0: menu_return = 1; return;
+            case 9: 
+                if (current_page != page_count-1) {	
+                    current_page++;
+                    continue;
+                }
+                else {
+                    invalidChoice();
+                    continue;
+                }
+            default: break;
+        }
+        
+        if((choice > i && choice != 8 && choice != 9 )|| choice < 0) {
+            invalidChoice();
+            continue;
+        }
+        system("cls");
+
+        int j = 0; int k = choice;
+        do {
+            if(page[current_page].options[j].function == NULL) {
+                k++;
+            }
+            j++;
+        } while(j != k);
+        page[current_page].options[k-1].function();
+        
+        
+        if(menu_return != 1) {
+            waitEnter();
+            system("cls");
+        }
+        menu_return = 0;
+    }
+}
 
 
 

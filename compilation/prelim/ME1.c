@@ -7,7 +7,6 @@ int product(int a, int b);
 void printMessage();
 
 void ME1() {
-	system("cls");
     printf("Hello world\n");
     int x = 100, y = 250;
     printf("The sum of %d and %d is %d.\n",x,y,sum(x,y));
@@ -17,8 +16,6 @@ void ME1() {
     for(int i=0; i<5;i++) {
         printMessage();
     }
-	waitEnter();
-	system("cls");
 }
 
 int sum(int a, int b) {

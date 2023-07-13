@@ -11,7 +11,6 @@ float getCharge(int n) {
 }
 
 void ME2() {
-	system("cls");
     int n = 0;
     float charge = 0;
     printf(
@@ -26,6 +25,4 @@ void ME2() {
     printf("\n------------------------------------\n"
             "The charge incurred is: Php %.2f\n", getCharge(n));
             
-	waitEnter();
-	system("cls");
 }

@@ -17,7 +17,13 @@ struct node {
   struct node *right;
 };
 
+void f2_series1() {
+	series1F2(5);
+}
 
+void f2_series2() {
+	series2F2(5);
+}
 
 void series1F2(int n) {
 	if (n > 0) {

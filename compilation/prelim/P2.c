@@ -47,7 +47,7 @@ void exercise3P2() {
     printArray2d(A, rows, cols);
 }
 
-int exercise4P2() {
+void exercise4P2() {
     int rows = 3;
     int cols = 3;
     double A[][3] = {{1,-3,5},{7,-9,-11},{-13,15,17}};

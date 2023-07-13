@@ -2,7 +2,7 @@
 #include "../glencrypt.h"
 
 
-int FPQuiz() {
+void FPQuiz() {
     FILE *input_file = fopen("data.txt", "r");;
     
    	if (input_file == NULL) {
