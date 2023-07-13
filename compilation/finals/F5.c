@@ -8,7 +8,7 @@ void FPVowel() {
      //Write a program that will count the number of vowel letters in a text file.
 	 
 	 char input_file_name[] = "input.txt";
-     FILE *input = fopen(input_file_name, "r");;
+     FILE *input = openFile("text/", input_file_name, "r");
      char ch;
      int count = 0;
      if (input == NULL) {
@@ -30,8 +30,8 @@ void FPFileIdentical() {
     char input_file_name[] = "input.txt";
     char input2_file_name[] = "input2.txt";
     
-    FILE *input = fopen(input_file_name, "r");
-    FILE *input2 = fopen(input2_file_name, "r");
+    FILE *input = openFile("text/", input_file_name, "r");
+    FILE *input2 = openFile("text/", input2_file_name, "r");
 
     if (input == NULL || input2 == NULL) {
         printColor(RED, "Error opening files.\n");

@@ -8,7 +8,7 @@ void MP1() {
 //    char c = 'A';
 
     input(Str, "Input name of output text file: ", outputfilename);
-    outputf = fopen(outputfilename, "w");
+    outputf = openFile("text/", outputfilename, "w");
     
 //	for(char i = 'A'; i <= 'Z'; i++) {
 	for(int i = 0; i < 26; i++) {
@@ -27,7 +27,7 @@ void MP2() {
 	char c;
 	
     input(Str, "Input name of output text file: ", inputfilename);
-	FILE *inputf = fopen(inputfilename, "r");
+	FILE *inputf = openFile("text/", inputfilename, "r");
 	
 	if (inputf == NULL) {
 		printf("ERROR: %s cannot be opened.\n", inputfilename);

@@ -14,7 +14,7 @@ void example1F1() {
 	int c;
 	
 	// Open text file for input
-	if ((inputf = fopen("test.txt", "r")) == NULL) {
+	if ((inputf = openFile("text/", "test.txt", "r")) == NULL) {
 		printf("ERROR: test.txt cannot be opened.\n");
 		return;
 	}
@@ -36,7 +36,7 @@ void example2F1() {
 	// Get the name of the text file to open.
 	input(Str, "Input name of text file: ", &filename); //replaced with custom input function
 	
-	if ((inputf = fopen(filename, "r")) == NULL) {
+	if ((inputf = openFile("text/", filename, "r")) == NULL) {
 		printf("ERROR: %s cannot be opened.\n", filename);
 		return;
 	}
@@ -58,7 +58,7 @@ void example3F1() {
 	input(Str, "Input name of text file: ", &filename);  //replaced with custom input function
 	
 	// Open the file for input.
-	if ((inputf = fopen(filename, "r")) == NULL) {
+	if ((inputf = openFile("text/", filename, "r")) == NULL) {
 		// The file could not be opened.
 		printf("ERROR: %s cannot be opened.\n", filename);
 		return;
@@ -83,7 +83,7 @@ void example4F1() {
 	input(Str, "Input name of input text file: ", &inputfilename);
 	
 	// Open the input file.
-	if ((inputf = fopen(inputfilename, "r")) == NULL) {
+	if ((inputf = openFile("text/", inputfilename, "r")) == NULL) {
 		// The input file could not be opened.
 		printf("ERROR: %s cannot be opened.\n", inputfilename);
 		return;
@@ -93,7 +93,7 @@ void example4F1() {
 	input(Str, "Input name of output text file: ", &outputfilename);
 	
 	// Open the output file.
-	outputf = fopen(outputfilename, "w");
+	outputf = openFile("text/", outputfilename, "w");
 	
 	// Read one character at a time from the input file and write it to the output file.
 	while ((c = fgetc(inputf)) != EOF) {
@@ -123,7 +123,7 @@ void example5F1() {
 	
 	// Ask for filename and open text file for output.
 	input(Str, "Input name of output text file: ", &outputfilename);
-	outputf = fopen(outputfilename, "w");
+	outputf = openFile("text/", outputfilename, "w");
 	
 	// Output formatted data onto text file.
 	fprintf(outputf, "ch = %c\n", ch);

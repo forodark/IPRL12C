@@ -26,7 +26,7 @@ void Finals_MP3() {
 	}
 
 	printLine(0);
-	FILE *output_file = fopen(file_name, "w");
+	FILE *output_file = openFile("text/", file_name, "w");
 	for (int i = n1; i <= n2; i++) {
 		fprintf(output_file, "%d\n", i);	
 	}
@@ -43,7 +43,7 @@ void Finals_MP4() {
 	printLine(0);
 	int n;
 	char file_name[] = "output.txt";
-	FILE *input_file = fopen(file_name, "r");
+	FILE *input_file = openFile("text/", file_name, "r");
 	
 	if (input_file == NULL) {
 		printColor(RED, "Error: %s cannot be opened.\n", file_name);

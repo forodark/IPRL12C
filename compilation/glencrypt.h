@@ -543,6 +543,12 @@ void showPageMenu(char *title, page_menu* page) {
     }
 }
 
+FILE *openFile(const char *path, const char *file_name, const char *mode) {
+    char file_path[100];
+    snprintf(file_path, sizeof(file_path), "%s%s", path, file_name);
+    FILE *input_file = fopen(file_path, mode);
+    return input_file;
+}
 
 
 

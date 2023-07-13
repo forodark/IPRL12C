@@ -3,7 +3,7 @@
 
 
 void FPQuiz() {
-    FILE *input_file = fopen("data.txt", "r");;
+    FILE *input_file = openFile("text/", "data.txt", "r");
     
    	if (input_file == NULL) {
 		printf("ERROR: data.txt cannot be opened.\n");
