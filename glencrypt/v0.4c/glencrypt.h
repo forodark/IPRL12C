@@ -388,6 +388,7 @@ typedef struct {
 void showMenu(char *title, menu* options) {
     while(1) {
         system("cls");
+        printLine(0);
         printf("%s\n", title);
         printLine(0);
         int i = 0;
