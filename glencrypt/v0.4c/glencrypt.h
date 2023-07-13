@@ -402,9 +402,10 @@ void showMenu(char *title, menu* options) {
                 i++;
             }
             else {
-                if(i != 0) {printLine(0);}
-                if(!strcmp(options[i+sub_count].text, "")) {printLine(0);}
-                printf("%s\n", options[i+sub_count].text);
+                if(i != 0 || !strcmp(options[i+sub_count].text, "")) {printLine(0);}
+                if(strcmp(options[i+sub_count].text, "")) {
+                    printf("%s\n", options[i+sub_count].text);
+                }
                 sub_count++;
             }
         }
@@ -422,7 +423,8 @@ void showMenu(char *title, menu* options) {
             waitEnter();
             continue;
         }
-        options[choice-1].function();
+        system("cls");
+        options[choice-1+sub_count].function();
         if(menu_return != 1) {
             waitEnter();
             system("cls");
