@@ -447,8 +447,8 @@ void showMenu(char *title, menu* options) {
     }
 }
 
-#define MAX_PAGES 128
 #define PAGE_LENGTH 7
+#define END_PAGE_MENU NULL
 
 typedef struct {
     menu *options;
@@ -524,7 +524,17 @@ void showPageMenu(char *title, page_menu* page) {
             continue;
         }
         system("cls");
-        page[current_page].options[choice-1+sub_count].function();
+
+        int j = 0; int k = choice;
+        do {
+            if(page[current_page].options[j].function == NULL) {
+                k++;
+            }
+            j++;
+        } while(j != k);
+        page[current_page].options[k-1].function();
+        
+        
         if(menu_return != 1) {
             waitEnter();
             system("cls");
