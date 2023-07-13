@@ -195,7 +195,7 @@ int isEmpty(const char *input) {
 
 //IMPROVED INPUT
 
-void input(int datatype, char prompt[256], void* output) {
+void input(int datatype, char *prompt, void* output) {
     if (datatype == 0){ //unspecified
 
     }
@@ -312,7 +312,7 @@ void input(int datatype, char prompt[256], void* output) {
 }
 
 
-void inputCustom(char prompt[256], void* output, char accepted[64]) {
+void inputCustom(char *prompt, void* output, char *accepted) {
     while(1) {
         printf("%s", prompt);
         char buffer[256];
