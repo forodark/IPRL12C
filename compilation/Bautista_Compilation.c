@@ -14,6 +14,7 @@
 
 #include "./midterm/M1.c"
 #include "./midterm/M2.c"
+#include "./midterm/M3.c"
 #include "./midterm/Bautista_ATMv4.c"
 
 #include "./finals/F1.c"
@@ -32,6 +33,7 @@ void showMenuP1();
 void showMenuP2();
 void showMenuM1(int page);
 void showMenuM2();
+void showMenuM3();
 void showMenuF1();
 void showMenuF2();
 void showMenuF3();
@@ -135,6 +137,8 @@ void showMenuP() { //menu for prelim exercises
 				printf("Invalid choice.\n");
 				waitEnter();
 		}
+		waitEnter();
+		system("cls");
 	}
 }
 void showMenuM() { //menu for midterm exercises
@@ -145,7 +149,8 @@ void showMenuM() { //menu for midterm exercises
 		printLine(0);
 	    printf("[1] Pointers Examples\n");
 	    printf("[2] Pointers Exercises\n");
-	    printf("[3] ATMv4 (Structures)\n");
+		printf("[3] Structures Examples");
+	    printf("[4] ATMv4 (Structures)\n");
 		printf("[0] Return\n");
 	    printLine(0);
     	int choice;
@@ -159,6 +164,8 @@ void showMenuM() { //menu for midterm exercises
             	showMenuM2();
 				break;
 			case 3:
+				showMenuM3();
+			case 4:
 				ATMv4();
 				break;
 			case 0:
@@ -168,6 +175,8 @@ void showMenuM() { //menu for midterm exercises
 				printf("Invalid choice.\n");
 				waitEnter();
 		}
+	waitEnter();
+	system("cls");
 	}
 }
 void showMenuF() { //menu for finals exercises
@@ -220,6 +229,8 @@ void showMenuF() { //menu for finals exercises
 				printf("Invalid choice.\n");
 				waitEnter();
 		}
+		waitEnter();
+		system("cls");
 	}
 }
 
@@ -550,6 +561,45 @@ void showMenuM2() { //menu for midterm exercises subcategory 2
 		}
 	waitEnter();
 	system("cls");
+	}
+}
+
+
+void showMenuM3() {// menu for m3
+    while(1) {
+		system("cls");
+		printLine(0);
+		printf("Structures M3examples\n");
+		printLine(0);
+	    printf("[1] example 1\n");
+	    printf("[2] example 2\n");
+	    printf("[3] example 3\n");
+	    printf("[4] example 4\n");
+		printf("[0] Exit\n");
+	    printLine(0);
+    	int choice;
+		input(Int, "Enter choice: ", &choice);
+		printLine(0);
+		switch (choice) {
+			case 1:
+            	M3example1();
+				break;
+			case 2:
+            	M3example2();
+				break;
+			case 3:
+				M3example3();
+				break;
+			case 4:
+				M3example4();
+				break;
+			case 0:
+				exit(0);
+				break;
+			default:
+				printf("Invalid choice.\n");
+				waitEnter();
+		}
 	}
 }
 
