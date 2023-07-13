@@ -149,7 +149,7 @@ void showMenuM() { //menu for midterm exercises
 		printLine(0);
 	    printf("[1] Pointers Examples\n");
 	    printf("[2] Pointers Exercises\n");
-		printf("[3] Structures Examples");
+		printf("[3] Structures Examples\n");
 	    printf("[4] ATMv4 (Structures)\n");
 		printf("[0] Return\n");
 	    printLine(0);
@@ -569,12 +569,12 @@ void showMenuM3() {// menu for m3
     while(1) {
 		system("cls");
 		printLine(0);
-		printf("Structures M3examples\n");
+		printf("Structures Examples\n");
 		printLine(0);
-	    printf("[1] example 1\n");
-	    printf("[2] example 2\n");
-	    printf("[3] example 3\n");
-	    printf("[4] example 4\n");
+	    printf("[1] Point Structure (Direct)\n");
+	    printf("[2] Student Structure (Direct)\n");
+	    printf("[3] Point Structure (Template)\n");
+	    printf("[4] Student Structure (Template)\n");
 		printf("[0] Exit\n");
 	    printLine(0);
     	int choice;
@@ -594,7 +594,7 @@ void showMenuM3() {// menu for m3
 				M3example4();
 				break;
 			case 0:
-				exit(0);
+				showMenuM();
 				break;
 			default:
 				printf("Invalid choice.\n");
