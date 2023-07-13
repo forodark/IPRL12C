@@ -378,14 +378,14 @@ void runProgram(char* path, char* program) {
     chdir(original_dir);
 }
 
-struct menu_option {
-    char *text;
+typedef struct {
+    char* text;
     void (*function)();
-};
+} menu;
 
 #define END_MENU {NULL, NULL}
 
-void showMenu(char *title, struct menu_option* options) {
+void showMenu(char *title, menu* options) {
     while(1) {
         system("cls");
         printf("%s\n", title);

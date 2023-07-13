@@ -9,7 +9,7 @@ void function2() {
 
 
 
-struct menu_option options[] = {
+menu options[] = {
     {"Option 1", function1},
     {"Option 2", function2},
     END_MENU
