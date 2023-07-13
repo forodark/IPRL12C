@@ -385,6 +385,7 @@ typedef struct {
 
 #define END_MENU {NULL, NULL}
 #define SUBTITLE NULL
+#define LINE {"", NULL}
 
 int menu_return = 0;
 void showMenu(char *title, menu* options) {
@@ -402,7 +403,8 @@ void showMenu(char *title, menu* options) {
             }
             else {
                 if(i != 0) {printLine(0);}
-                printf(" %s\n", options[i+sub_count].text);
+                if(!strcmp(options[i+sub_count].text, "")) {printLine(0);}
+                printf("%s\n", options[i+sub_count].text);
                 sub_count++;
             }
         }
