@@ -506,7 +506,7 @@ void showPageMenu(char *title, page_menu* page) {
                     invalidChoice();
                     continue;
                 }
-            case 0: return;
+            case 0: menu_return = 1; return;
             case 9: 
                 if (current_page != page_count-1) {	
                     current_page++;
