@@ -48,7 +48,7 @@ char original_dir[128];
 
 
 int main() { //main function only calls the main menu, the main loop is located there
-	
+	getcwd(original_dir, sizeof(original_dir)); //save current dir
 
 	showMenuMain();
 	return 0;
