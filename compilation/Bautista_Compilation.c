@@ -2,6 +2,8 @@
 //Bautista, Glen Angelo D
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "glencrypt.h"
 
 #include "./prelim/P1.c"
@@ -36,9 +38,16 @@ void showMenuF3();
 void showMenuF4();
 void showMenuF5();
 
+
+
 //I updated all the names in the menus so that its more descriptive of the functionality
 
+char original_dir[128];
+
+
 int main() { //main function only calls the main menu, the main loop is located there
+	
+
 	showMenuMain();
 	return 0;
 }
@@ -173,6 +182,7 @@ void showMenuF() { //menu for finals exercises
 	    printf("[4] File Processing Quiz\n");
 		printf("[5] File Processing Machine Problems 3-4\n");
 		printf("[6] File Processing Activity - July 6\n");
+		printf("[7] ATMv7.2 (File-Based)\n");
 		printf("[0] Return\n");
 	    printLine(0);
     	int choice;
@@ -196,6 +206,12 @@ void showMenuF() { //menu for finals exercises
 				break;
 			case 6:
 				showMenuF5();
+				break;
+			case 7:
+				chdir("finals/ATMv7.2/"); 
+				system("cls");
+				system("Bautista_ATMv7.2.exe");
+				chdir(original_dir);
 				break;
 			case 0:
 				showMenuMain();
