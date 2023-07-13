@@ -402,6 +402,12 @@ void showMenu(char *title, menu* options) {
         if(choice == 0) {
             return;
         }
+        if(choice > i || choice < 0) {
+            printColor(RED,"Invalid choice.\n");
+            printLine(0);
+            waitEnter();
+            continue;
+        }
         options[choice-1].function();
         waitEnter();
         system("cls");
