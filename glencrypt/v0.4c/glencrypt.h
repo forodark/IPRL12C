@@ -415,6 +415,11 @@ void showMenu(char *title, menu* options) {
     }
 }
 
+void exitProgram() { 
+	system("cls");
+	printf("Exiting Program...\n");
+	exit(0);	
+}
 
 
 
