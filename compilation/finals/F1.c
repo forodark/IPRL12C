@@ -16,7 +16,7 @@ void example1F1() {
 	// Open text file for input
 	if ((inputf = fopen("test.txt", "r")) == NULL) {
 		printf("ERROR: test.txt cannot be opened.\n");
-		exit(1);
+		return;
 	}
 	
 	// Read one character at a time from file, output onto screen
@@ -38,7 +38,7 @@ void example2F1() {
 	
 	if ((inputf = fopen(filename, "r")) == NULL) {
 		printf("ERROR: %s cannot be opened.\n", filename);
-		exit(1);
+		return;
 	}
 	
 	while ((c = fgetc(inputf)) != EOF) {
@@ -61,7 +61,7 @@ void example3F1() {
 	if ((inputf = fopen(filename, "r")) == NULL) {
 		// The file could not be opened.
 		printf("ERROR: %s cannot be opened.\n", filename);
-		exit(1);
+		return;
 	}
 	
 	// Read one character at a time from the file and output it to stdout.
@@ -86,7 +86,7 @@ void example4F1() {
 	if ((inputf = fopen(inputfilename, "r")) == NULL) {
 		// The input file could not be opened.
 		printf("ERROR: %s cannot be opened.\n", inputfilename);
-		exit(1);
+		return;
 	}
 	
 	// Get the name of the output text file.
