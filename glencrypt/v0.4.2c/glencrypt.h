@@ -32,7 +32,7 @@ typedef enum {
 
 
 //COSMETIC STUFFS
-void printLine(int type) {
+void printLine(int type) { //print lines in different styles
 	switch(type) {
 		case 0: //normal
 			printf("---------------------------------\n");
@@ -57,7 +57,7 @@ void printLine(int type) {
 #define CYAN FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY
 #define WHITE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY
 
-void printColor(int textColor, const char* format, ...)
+void printColor(int textColor, const char* format, ...) //printf in color
 {
     // Get the current console handle
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -83,7 +83,7 @@ void printColor(int textColor, const char* format, ...)
 
 //MISC
 
-int getCharPos(char* str, char ch) {
+int getCharPos(char* str, char ch) { //locates the position of a character in a string
     char* pos = strchr(str, ch);
     if (pos == NULL) {
         return -1;
@@ -92,7 +92,7 @@ int getCharPos(char* str, char ch) {
         return (int)(pos - str);
     }
 }
-void waitEnter() {
+void waitEnter() { //waits for user to press enter
     printf("Press Enter to continue...");
     fflush(stdout);  
 
@@ -101,13 +101,13 @@ void waitEnter() {
     }
 }
 
-void invalidChoice() {
+void invalidChoice() { //returns invalid choice
     printColor(RED,"Invalid choice.\n");
     printLine(0);
     waitEnter();
 }
 
-void exitProgram() { 
+void exitProgram() { //exits program
 	system("cls");
 	printf("Exiting Program...\n");
 	exit(0);	
@@ -118,7 +118,7 @@ void exitProgram() {
 //Encryption
 
 
-const char* keyEncrypt(char input[], char key[]) {
+const char* keyEncrypt(char input[], char key[]) { //custom encryption algorithm that takes a key
     static char output[256];
     int converted_input[256];
     int converted_key[256];
@@ -144,7 +144,7 @@ const char* keyEncrypt(char input[], char key[]) {
     return output;
 }
 
-const char* keyDecrypt(char input[], char key[]) {
+const char* keyDecrypt(char input[], char key[]) { //custom decryption algorithm that takes a key
     static char output[256];
     int converted_input[256];
     int converted_key[256];
@@ -171,16 +171,16 @@ const char* keyDecrypt(char input[], char key[]) {
 }
 
 
-const char* encrypt(char input[]) {
+const char* encrypt(char input[]) { //encrypt using default key
     return keyEncrypt(input, DEFAULTKEY);
 }
 
-const char* decrypt(char input[]) {
+const char* decrypt(char input[]) { //decrypt using default key
     return keyDecrypt(input, DEFAULTKEY);
 }
 
 
-char* generateKey(int length) {
+char* generateKey(int length) { //generates a random key
     static int initialized = 0;
     static char key[256];
     if (!initialized) {
@@ -197,7 +197,7 @@ char* generateKey(int length) {
 
 //CHECKS
 
-int isEmpty(const char *input) {
+int isEmpty(const char *input) { //check if string is empty
     size_t len = strlen(input);
     for (size_t i = 0; i < len; i++) {
         if (!isspace(input[i])) {
@@ -210,7 +210,7 @@ int isEmpty(const char *input) {
 
 //IMPROVED INPUT
 
-void input(int datatype, char *prompt, void* output) {
+void input(int datatype, char *prompt, void* output) { //input variable of specified datatype
     if (datatype == 0){ //unspecified
 
     }
@@ -327,7 +327,7 @@ void input(int datatype, char *prompt, void* output) {
 }
 
 
-void inputCustom(char *prompt, void* output, char *accepted) {
+void inputCustom(char *prompt, void* output, char *accepted) { //input a string, rejects characters not in the accepted string
     while(1) {
         printf("%s", prompt);
         char buffer[256];
@@ -383,7 +383,7 @@ void inputCustom(char *prompt, void* output, char *accepted) {
 
 char original_dir[256];
 
-void runProgram(char* path, char* program) {
+void runProgram(char* path, char* program) { //run a exe program
     getcwd(original_dir, sizeof(original_dir));
     chdir(path); 
     system("cls");
@@ -402,7 +402,7 @@ typedef struct {
 #define LINE {"", NULL}
 
 int menu_return = 0;
-void showMenu(char *title, menu* options) {
+void showMenu(char *title, menu* options) { //standard menu
     while(1) {
         system("cls");
         printLine(0);
@@ -454,7 +454,7 @@ typedef struct {
     menu *options;
 } page_menu;
 
-void showPageMenu(char *title, page_menu* page) {
+void showPageMenu(char *title, page_menu* page) { //menu with page support
     int current_page = 0;
     int page_count = 0;
     while (page[page_count].options != NULL) {
