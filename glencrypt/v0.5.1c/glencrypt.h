@@ -24,17 +24,7 @@
 
 #define STRINGIFY(x) #x
 
-typedef enum {
-    Undef,
-    Int,
-    Double,
-    Char,
-    Str,
-    Bool
-} DataType;
-
-
-
+#define input(datatype, prompt, output) input_impl(STRINGIFY(datatype), prompt, output)
 
 //COSMETIC STUFFS
 void printLine(int type) { //print lines in different styles
@@ -356,11 +346,8 @@ int isEmpty(const char *input) { //check if string is empty
 
 //IMPROVED INPUT
 
-void input(int datatype, char *prompt, void* output) { //input variable of specified datatype
-    if (datatype == 0){ //unspecified
-
-    }
-    else if (datatype == 1) {
+void input_impl(char* datatype, char *prompt, void* output) { //input variable of specified datatype
+    if (!strcmp(datatype, "int") || !strcmp(datatype, "Int")) {
         while(1) {
             printf("%s", prompt);
             char buffer[256];
@@ -384,7 +371,7 @@ void input(int datatype, char *prompt, void* output) { //input variable of speci
             }
         }
     }
-    else if (datatype == 2) { //double
+    else if (!strcmp(datatype, "double") || !strcmp(datatype, "Double")) { //double
         while (1) {
             printf("%s", prompt);
             char buffer[256];
@@ -407,7 +394,7 @@ void input(int datatype, char *prompt, void* output) { //input variable of speci
             }
         }
     }
-    else if (datatype == 3) { //char
+    else if (!strcmp(datatype, "char") || !strcmp(datatype, "Char")) { //char
         while (1) {
             printf("%s", prompt);
             char buffer[256];
@@ -427,7 +414,7 @@ void input(int datatype, char *prompt, void* output) { //input variable of speci
         }
     }
 
-    else if (datatype == 4) { // string
+    else if (!strcmp(datatype, "string") || !strcmp(datatype, "char*") || !strcmp(datatype, "Str")) { // string
         while(1) {
             printf("%s", prompt);
             char buffer[256];
@@ -447,7 +434,7 @@ void input(int datatype, char *prompt, void* output) { //input variable of speci
     }
 
 
-    else if (datatype == 5) { //bool (int but accepts y/n/1/0)
+    else if (!strcmp(datatype, "bool") || !strcmp(datatype, "Bool")) { //bool (int but accepts y/n/1/0)
         while (1) {
             printf("%s", prompt);
             char buffer[256];

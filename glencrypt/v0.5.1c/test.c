@@ -3,26 +3,32 @@
 #include <unistd.h>  // For getcwd, chdir, and access
 #include "glencrypt.h"
 
-void compileRunProgram(const char* path, const char* program) { //compile then run, SLOW AF
-    getcwd(original_dir, sizeof(original_dir));
-    chdir(path);
-
-    char compile_command[256];
-    snprintf(compile_command, sizeof(compile_command), "gcc %s.c -o %s.exe", program, program);
-    printLine(0);
-    printf("Compiling... Please Wait.\n");
-    printLine(0);
-    system(compile_command);
-
-    char run_command[256];
-    snprintf(run_command, sizeof(run_command), "%s.exe", program);
-    system(run_command);
-
-    system("cls");
-    chdir(original_dir);
-}
 
 int main() {
-    compileRunProgram("LRT/", "Bautista_LRT");
+    int i;
+    double d;
+    char c;
+    char str[256];
+    char str2[256];
+    int b;
+
+    input(int, "Enter int: ", &i);
+    printf("Number: %d\n", i);
+
+    input(double, "Enter double: ", &d);
+    printf("Number: %lf\n", d);
+
+    input(char, "Enter char: ", &c);
+    printf("Number: %c\n", c);
+
+    input(char*, "Enter string: ", str);
+    printf("Number: %s\n", str);
+
+    input(string, "Enter string: ", str2);
+    printf("Number: %s\n", str2);
+
+    input(bool, "Enter bool: ", &b);
+    printf("Number: %d\n", b);
+
     return 0;
 }
