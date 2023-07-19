@@ -10,6 +10,7 @@
 #include <windows.h>
 #include <unistd.h>
 #include <stddef.h>
+#include <math.h>
 
 #define ALPHANUM "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 #define NUMERIC "0123456789."
@@ -51,6 +52,14 @@ void printLine(int type) { //print lines in different styles
 			printf("---------------------------------\n");
 			break;
 	}
+}
+
+
+void printLineWidth(int width) {
+    for (int i = 0; i < width; i++) {
+        printf("-");
+    }
+    printf("\n");
 }
 
 //COLOR DEFINITIONS
@@ -110,6 +119,12 @@ void waitEnter() { //waits for user to press enter
 void invalidChoice() { //returns invalid choice
     printColor(RED,"Invalid choice.\n");
     printLine(0);
+    waitEnter();
+}
+
+void invalidChoiceCustom(char* message, int width) { //returns invalid choice
+    printColor(RED, message);
+    printLineWidth(width);
     waitEnter();
 }
 
@@ -732,6 +747,8 @@ void printTable(char* title, table* table) {
     }
     printf("\n");
 }
+
+
 
 
 #endif
