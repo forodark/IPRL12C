@@ -134,6 +134,18 @@ void exitProgram() { //exits program
 	exit(0);	
 }
 
+#define getDataType(x) _Generic((x), \
+    int:     "int", \
+    float:   "float", \
+    double:  "double", \
+    char*:   "char*", \
+    void*:   "void*", \
+    size_t:  "size_t", \
+    int*:    "int*", \
+    float*:  "float*", \
+    double*: "double*", \
+    default: "other")
+
 void convertString(void* data, char* type, char* str) { //convert any datatype to string
     if (data == NULL) {
         strcpy(str, "NULL");
