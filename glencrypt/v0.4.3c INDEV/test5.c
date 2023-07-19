@@ -21,12 +21,12 @@ person people[] = {
 };
 
 table test[] = {
-    TABLE_COLUMN("Name", people, name, "%s"),
-    TABLE_COLUMN("Age", people, age, "%d"),
-    TABLE_COLUMN("Salary", people, salary, "%.2lf"),
+    TABLE_COLUMN("Name", people, name, "%-16s"),
+    TABLE_COLUMN("Age", people, age, "%-6d"),
+    TABLE_COLUMN("Salary", people, salary, "%-20.2lf"),
 };
 
 int main() {
-    printTable(test);
+    printTable("Test Table", test);
     return 0;
 }

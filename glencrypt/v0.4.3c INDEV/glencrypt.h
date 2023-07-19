@@ -208,6 +208,32 @@ char* typeFromFormat(char* format) {
     return "unknown";
 }
 
+int isNumericChar(char ch) {
+    return isdigit(ch) || ch == '.' || ch == '-' || ch == '+';
+}
+
+int extractNumber(const char *str) {
+    // Skip leading whitespaces and non-digit characters
+    while (*str && !isdigit(*str)) {
+        str++;
+    }
+
+    // Extract the numeric part (integral part only)
+    int result = 0;
+    while (*str && isdigit(*str)) {
+        result = result * 10 + (*str - '0');
+        str++;
+    }
+
+    return result; // Return the extracted number
+}
+
+void printCentered(const char *str, int fieldWidth) {
+    int strLength = strlen(str);
+    int padding = (fieldWidth - strLength) / 2;
+    printf("%*s%s%*s", padding, "", str, fieldWidth - padding - strLength, "");
+}
+
 //Encryption
 
 
@@ -659,28 +685,52 @@ typedef struct {
 
 #define END_TABLE {NULL, NULL, 0, 0, 0, NULL}
 
-void printTable(table* table) {
+void printTable(char* title, table* table) {
     int num_columns = 0;
     while (table[num_columns].header != NULL) {
         num_columns++;
     }
 
-    // Print table headers
+    // Print table title
+    int table_width = (num_columns*2)+1;
     for (int i = 0; i < num_columns; i++) {
-        printf("%s\t", table[i].header);
+        table_width += extractNumber(table[i].format);
+    }
+    for (int i = 0; i < table_width; i++) {
+        printf("-");
+    }
+    printf("\n");
+    printCentered(title, table_width);
+    printf("\n");
+    for (int i = 0; i < table_width; i++) {
+        printf("-");
+    }
+    printf("\n");
+
+    // Print table headers
+    printf("|");
+    for (int i = 0; i < num_columns; i++) {
+        int column_width = extractNumber(table[i].format) + 1;
+        printCentered(table[i].header, column_width);
+        printf("|");
     }
     printf("\n");
 
     // Print table content
     for (int i = 0; i < table->content_size; i++) {
+        printf("|");
         for (int j = 0; j < num_columns; j++) {
             char buffer[MAX_STRING_LENGTH];
             formatString((char*)((uintptr_t)table[j].content + table[j].offset) + (i * table[j].struct_size), typeFromFormat(table[j].format), buffer, table[j].format);
             // convertString((char*)((uintptr_t)table[j].content + table[j].offset) + (i * table[j].struct_size), table[j].format, buffer); //this line is killing me
-            printf("%s\t", buffer);
+            printf(" %s|", buffer);
         }
         printf("\n");
     }
+    for (int i = 0; i < table_width; i++) {
+        printf("-");
+    }
+    printf("\n");
 }
 
 
