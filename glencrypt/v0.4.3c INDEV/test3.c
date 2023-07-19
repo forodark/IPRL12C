@@ -4,6 +4,13 @@
 
 #define MAX_STRING_LENGTH 256
 
+// Helper macro to handle string conversion
+#define STRINGIFY(x) #x
+
+// Macro to define a table column
+#define TABLE_COLUMN(TITLE, STRUCT_PTR, MEMBER_NAME, TYPE_ARG) \
+    {TITLE, (void**)&(STRUCT_PTR), sizeof(STRUCT_PTR) / sizeof(STRUCT_PTR[0]), \
+    offsetof(typeof(*(STRUCT_PTR)), MEMBER_NAME), sizeof(STRUCT_PTR[0]), STRINGIFY(TYPE_ARG)}
 
 void convertString(void* data, char* type, char* str) {
     if (data == NULL) {
@@ -70,13 +77,18 @@ person people[] = {
     {"Charlie", 50, 40000},
 };
 
-table test[] = {
-    {"Name", (void**)&people, sizeof(people) / sizeof(people[0]), offsetof(person, name), sizeof(people[0]), "char*"},
-    {"Age", (void**)&people, sizeof(people) / sizeof(people[0]), offsetof(person, age), sizeof(people[0]), "int"},
-    {"Salary", (void**)&people, sizeof(people) / sizeof(people[0]), offsetof(person, salary), sizeof(people[0]), "double"},
-    END_TABLE
-};
+// table test[] = {
+//     {"Name", (void**)&people, sizeof(people) / sizeof(people[0]), offsetof(person, name), sizeof(people[0]), "char*"},
+//     {"Age", (void**)&people, sizeof(people) / sizeof(people[0]), offsetof(person, age), sizeof(people[0]), "int"},
+//     {"Salary", (void**)&people, sizeof(people) / sizeof(people[0]), offsetof(person, salary), sizeof(people[0]), "double"},
+//     END_TABLE
+// };
 
+table test[] = {
+    TABLE_COLUMN("Name", people, name, char*),
+    TABLE_COLUMN("Age", people, age, int),
+    TABLE_COLUMN("Salary", people, salary, double),
+};
 
 int main() {
     printTable(test);
