@@ -700,7 +700,7 @@ typedef struct {
 
 #define END_TABLE {NULL, NULL, 0, 0, 0, NULL}
 
-void printTable(char* title, table* table) {
+void printTableFull(char* title, table* table) {
     int num_columns = 0;
     while (table[num_columns].header != NULL) {
         num_columns++;
@@ -749,6 +749,99 @@ void printTable(char* title, table* table) {
 }
 
 
+#define TABLE_PAGE_LENGTH 10
+
+void printTable(char* title, table* table) {
+    int num_columns = 0;
+    while (table[num_columns].header != NULL) {
+        num_columns++;
+    }
+
+    int page = 0; 
+    int max_page = ((table->content_size) / TABLE_PAGE_LENGTH);
+    int page_row_counter = 0; int table_row_counter = 0;
+
+    while(1) {
+        system("cls");
+        // Print table title
+        int table_width = (num_columns*2)+1;
+        for (int i = 0; i < num_columns; i++) {
+            table_width += extractNumber(table[i].format);
+        }
+        printLineWidth(table_width);
+        printCentered(title, table_width);
+        printf("\n");
+        printLineWidth(table_width);
+
+        // Print table headers
+        printf("|");
+        for (int i = 0; i < num_columns; i++) {
+            int column_width = extractNumber(table[i].format) + 1;
+            printCentered(table[i].header, column_width);
+            printf("|");
+        }
+        printf("\n");
+
+        // Print table content
+        for (; page_row_counter < TABLE_PAGE_LENGTH && table_row_counter < table->content_size; page_row_counter++, table_row_counter++) {
+            printf("|");
+            for (int j = 0; j < num_columns; j++) {
+                char buffer[MAX_STRING_LENGTH];
+                formatString((char*)((uintptr_t)table[j].content + table[j].offset) + (table_row_counter * table[j].struct_size), typeFromFormat(table[j].format), buffer, table[j].format);
+                // convertString((char*)((uintptr_t)table[j].content + table[j].offset) + (table_row_counter * table[j].struct_size), table[j].format, buffer); //this line is killing me
+                printf(" %s|", buffer);
+            }
+            printf("\n");
+        }
+        page_row_counter = 0;
+
+        printLineWidth(table_width);
+
+        printf(" Page %d/%d    ", page+1, max_page+1);
+        if (page > 0) {
+            printf("[8] Previous Page    ");
+        }
+        if (page != max_page) {
+            printf("[9] Next Page    ");
+        }
+        printf("[0] Return\n");
+
+        printLineWidth(table_width);
+
+        int choice;
+        input(Int, "Enter choice: ", &choice);
+        switch (choice) {
+            case 8:
+                if (page > 0) {	
+                    page--;
+                    table_row_counter = page*TABLE_PAGE_LENGTH;
+                    break;
+                }
+                else {
+                    invalidChoiceCustom("Invalid choice.", table_width);
+                    continue;
+                }
+                
+            case 9:
+                if (page != max_page) {	
+                    page++;
+                    table_row_counter = page*TABLE_PAGE_LENGTH;
+                    break;
+                }
+                else {
+                    invalidChoiceCustom("Invalid choice.", table_width);
+                    continue;
+                }
+            case 0:
+                printLine(2);
+                return;
+                break;
+            default:
+                invalidChoiceCustom("Invalid choice.", table_width);
+                continue; 
+        }
+    }
+}
 
 
 #endif
