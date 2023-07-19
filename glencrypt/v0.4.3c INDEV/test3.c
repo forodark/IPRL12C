@@ -1,74 +1,18 @@
 #include <stdio.h>
-#include <stddef.h>
-#include <string.h>
-
-#define MAX_STRING_LENGTH 256
-
-// Helper macro to handle string conversion
-#define STRINGIFY(x) #x
-
-// Macro to define a table column
-#define TABLE_COLUMN(TITLE, STRUCT_PTR, MEMBER_NAME, TYPE_ARG) \
-    {TITLE, (void**)&(STRUCT_PTR), sizeof(STRUCT_PTR) / sizeof(STRUCT_PTR[0]), \
-    offsetof(typeof(*(STRUCT_PTR)), MEMBER_NAME), sizeof(STRUCT_PTR[0]), STRINGIFY(TYPE_ARG)}
-
-void convertString(void* data, char* type, char* str) {
-    if (data == NULL) {
-        strcpy(str, "NULL");
-    } else if (!strcmp(type, "int")) {
-        snprintf(str, MAX_STRING_LENGTH, "%d", *((int*)data));
-    } else if (!strcmp(type, "float")) {
-        snprintf(str, MAX_STRING_LENGTH, "%f", *((float*)data));
-    } else if (!strcmp(type, "double")) {
-        snprintf(str, MAX_STRING_LENGTH, "%.2lf", *((double*)data));
-    } else if (!strcmp(type, "char*")) {
-        snprintf(str, MAX_STRING_LENGTH, "%s", (char*)data);
-    } else {
-        strcpy(str, "Unknown Type"); // Handle unknown types
-    }
-}
-
-typedef struct {
-    char* header;
-    void** content;
-    size_t content_size;  // Change to 'num_elements'
-    size_t offset;
-    size_t struct_size;  // Add the size of the structure
-    char* data_type;     // Add the data type of the column
-} table;
-
-
-#define END_TABLE {NULL, NULL, 0, 0, 0, NULL}
-
-void printTable(table* table) {
-    int num_columns = 0;
-    while (table[num_columns].header != NULL) {
-        num_columns++;
-    }
-
-    // Print table headers
-    for (int i = 0; i < num_columns; i++) {
-        printf("%s\t", table[i].header);
-    }
-    printf("\n");
-
-    // Print table content
-    for (int i = 0; i < table->content_size; i++) {
-        for (int j = 0; j < num_columns; j++) {
-            char buffer[MAX_STRING_LENGTH];
-            convertString((char*)((uintptr_t)table[j].content + table[j].offset) + (i * table[j].struct_size), table[j].data_type, buffer);
-            printf("%s\t", buffer);
-        }
-        printf("\n");
-    }
-}
-
+#include "glencrypt.h"
 
 typedef struct {
     char name[20];
     int age;
     double salary;
 } person;
+
+typedef struct {
+    char name[20];
+    char number[20];
+    double balance;
+    int count;
+} account;
 
 person people[] = {
     {"John", 20, 10000},
@@ -77,12 +21,12 @@ person people[] = {
     {"Charlie", 50, 40000},
 };
 
-// table test[] = {
-//     {"Name", (void**)&people, sizeof(people) / sizeof(people[0]), offsetof(person, name), sizeof(people[0]), "char*"},
-//     {"Age", (void**)&people, sizeof(people) / sizeof(people[0]), offsetof(person, age), sizeof(people[0]), "int"},
-//     {"Salary", (void**)&people, sizeof(people) / sizeof(people[0]), offsetof(person, salary), sizeof(people[0]), "double"},
-//     END_TABLE
-// };
+account accounts[] = {
+    {"John", "1234567890", 1000, 1},
+    {"Jane", "9876543210", 2000, 2},
+    {"Bob", "1111111111", 3000, 3},
+    {"Charlie", "2222222222", 4000, 4},
+};
 
 table test[] = {
     TABLE_COLUMN("Name", people, name, char*),
@@ -90,12 +34,16 @@ table test[] = {
     TABLE_COLUMN("Salary", people, salary, double),
 };
 
+table test2[] = {
+    TABLE_COLUMN("Name", accounts, name, char*),
+    TABLE_COLUMN("Number", accounts, number, char*),
+    TABLE_COLUMN("Balance", accounts, balance, double),
+    TABLE_COLUMN("Count", accounts, count, int),
+    END_TABLE
+};
+
 int main() {
     printTable(test);
-
-    // printf("%zu\n", offsetof(person, age));
-    // printf("%zu\n", offsetof(people[0], age));
-    // printf("%zu\n", sizeof(people) / sizeof(people[0]));
 
     return 0;
 }

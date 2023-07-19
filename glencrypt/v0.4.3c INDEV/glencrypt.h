@@ -9,6 +9,7 @@
 #include <stdarg.h>
 #include <windows.h>
 #include <unistd.h>
+#include <stddef.h>
 
 #define ALPHANUM "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 #define NUMERIC "0123456789."
@@ -18,6 +19,9 @@
 #define DEFAULTKEY "}Pj? THrxT_{Dh^Q.UdrG&s-X'?zaPBJ-2]dyFD23IV9:'&tT%]:}$m@<~[,oT$"
 #define KEYGEN "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+,-./:;<=>?@[]^_`{|}~ "
 
+#define MAX_STRING_LENGTH 256
+
+#define STRINGIFY(x) #x
 
 typedef enum {
     Undef,
@@ -48,6 +52,8 @@ void printLine(int type) { //print lines in different styles
 			break;
 	}
 }
+
+//COLOR DEFINITIONS
 #define BLACK 0
 #define RED FOREGROUND_RED | FOREGROUND_INTENSITY
 #define GREEN FOREGROUND_GREEN | FOREGROUND_INTENSITY
@@ -113,7 +119,21 @@ void exitProgram() { //exits program
 	exit(0);	
 }
 
-
+void convertString(void* data, char* type, char* str) { //convert any datatype to string
+    if (data == NULL) {
+        strcpy(str, "NULL");
+    } else if (!strcmp(type, "int")) {
+        snprintf(str, MAX_STRING_LENGTH, "%d", *((int*)data));
+    } else if (!strcmp(type, "float")) {
+        snprintf(str, MAX_STRING_LENGTH, "%f", *((float*)data));
+    } else if (!strcmp(type, "double")) {
+        snprintf(str, MAX_STRING_LENGTH, "%.2lf", *((double*)data));
+    } else if (!strcmp(type, "char*")) {
+        snprintf(str, MAX_STRING_LENGTH, "%s", (char*)data);
+    } else {
+        strcpy(str, "Unknown Type"); // Handle unknown types
+    }
+}
 
 //Encryption
 
@@ -550,31 +570,44 @@ FILE *openFile(const char *path, const char *file_name, const char *mode) {
     return input_file;
 }
 
-// typedef struct {
-//     char* header;
-//     char* content;
-// } table;
+//PRINT TABLE
+#define TABLE_COLUMN(TITLE, STRUCT_PTR, MEMBER_NAME, TYPE_ARG) \
+    {TITLE, (void**)&(STRUCT_PTR), sizeof(STRUCT_PTR) / sizeof(STRUCT_PTR[0]), \
+    offsetof(typeof(*(STRUCT_PTR)), MEMBER_NAME), sizeof(STRUCT_PTR[0]), STRINGIFY(TYPE_ARG)}
 
-// #define END_TABLE {NULL, NULL}
+typedef struct {
+    char* header;
+    void** content;
+    size_t content_size;  // Change to 'num_elements'
+    size_t offset;
+    size_t struct_size;  // Add the size of the structure
+    char* data_type;     // Add the data type of the column
+} table;
 
-// void printTable(table* table) {
-//     for(int i = 0; table[i].header != NULL; i++) {
-//         printf("%s\n", *table[i].header);
-//     }
-//     printf("\n");
-//     for(int i = 0; table[i].content != NULL; i++) {
-//         printf("%s\n", *table[i].content);
-//     }
-// }
+#define END_TABLE {NULL, NULL, 0, 0, 0, NULL}
 
+void printTable(table* table) {
+    int num_columns = 0;
+    while (table[num_columns].header != NULL) {
+        num_columns++;
+    }
 
+    // Print table headers
+    for (int i = 0; i < num_columns; i++) {
+        printf("%s\t", table[i].header);
+    }
+    printf("\n");
 
-
-// table test[] = {
-//     {"Name", people[0].name},
-//     {"Age", people[0].age},
-//     {"Salary", people[0].salary},
-// };
+    // Print table content
+    for (int i = 0; i < table->content_size; i++) {
+        for (int j = 0; j < num_columns; j++) {
+            char buffer[MAX_STRING_LENGTH];
+            convertString((char*)((uintptr_t)table[j].content + table[j].offset) + (i * table[j].struct_size), table[j].data_type, buffer);
+            printf("%s\t", buffer);
+        }
+        printf("\n");
+    }
+}
 
 
 #endif
