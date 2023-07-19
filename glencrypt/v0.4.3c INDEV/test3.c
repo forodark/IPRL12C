@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "glencrypt.h"
 
+
+
 typedef struct {
     char name[20];
     int age;
@@ -28,22 +30,37 @@ account accounts[] = {
     {"Charlie", "2222222222", 4000, 4},
 };
 
+// table test[] = {
+//     TABLE_COLUMN("Name", people, name, "char*"),
+//     TABLE_COLUMN("Age", people, age, "int"),
+//     TABLE_COLUMN("Salary", people, salary, "double"),
+// };
+
 table test[] = {
-    TABLE_COLUMN("Name", people, name, char*),
-    TABLE_COLUMN("Age", people, age, int),
-    TABLE_COLUMN("Salary", people, salary, double),
+    TABLE_COLUMN("Name", people, name, "%s"),
+    TABLE_COLUMN("Age", people, age, "%d"),
+    TABLE_COLUMN("Salary", people, salary, "%lf"),
 };
 
-table test2[] = {
-    TABLE_COLUMN("Name", accounts, name, char*),
-    TABLE_COLUMN("Number", accounts, number, char*),
-    TABLE_COLUMN("Balance", accounts, balance, double),
-    TABLE_COLUMN("Count", accounts, count, int),
-    END_TABLE
-};
+// table test2[] = {
+//     TABLE_COLUMN("Name", accounts, name, char*),
+//     TABLE_COLUMN("Number", accounts, number, char*),
+//     TABLE_COLUMN("Balance", accounts, balance, double),
+//     TABLE_COLUMN("Count", accounts, count, int),
+//     END_TABLE
+// };
 
 int main() {
     printTable(test);
+    
+    // int x = 100;
+    // float x = 100.2;
+
+    // char buffer[MAX_STRING_LENGTH];
+
+    // formatString("%f", buffer, x);
+
+    // printf("%s\n", buffer);
 
     return 0;
 }

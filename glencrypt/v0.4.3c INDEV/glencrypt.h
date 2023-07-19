@@ -135,6 +135,79 @@ void convertString(void* data, char* type, char* str) { //convert any datatype t
     }
 }
 
+void formatString(void* data, char* type, char* str, char* format) { //convert any datatype to string
+    if (data == NULL) {
+        strcpy(str, "NULL");
+    } else if (!strcmp(type, "int")) {
+        snprintf(str, MAX_STRING_LENGTH, format, *((int*)data));
+    } else if (!strcmp(type, "float")) {
+        snprintf(str, MAX_STRING_LENGTH, format, *((float*)data));
+    } else if (!strcmp(type, "double")) {
+        snprintf(str, MAX_STRING_LENGTH, format, *((double*)data));
+    } else if (!strcmp(type, "char*")) {
+        snprintf(str, MAX_STRING_LENGTH, format, (char*)data);
+    } else {
+        strcpy(str, "Unknown Type"); // Handle unknown types
+    }
+}
+
+char* typeFromFormat(char* format) {
+    int length = strlen(format);
+    int i = 0;
+
+    while (i < length) {
+        if (format[i] == '%') {
+            i++; // Skip the '%'
+
+            // Skip flags and width field
+            while (i < length && (format[i] == '-' || format[i] == '+' || format[i] == ' ' || format[i] == '0' || format[i] == '#' || format[i] == '*')) {
+                i++;
+            }
+
+            // Skip width field (numeric characters)
+            while (i < length && format[i] >= '0' && format[i] <= '9') {
+                i++;
+            }
+
+            // Check if there is a precision specifier
+            if (format[i] == '.') {
+                i++; // Skip the '.'
+
+                // Skip precision field (numeric characters)
+                while (i < length && format[i] >= '0' && format[i] <= '9') {
+                    i++;
+                }
+            }
+
+            // Check for format specifier characters (e.g., "lf", "f", "d", "s")
+            if (i < length && (format[i] == 'l' || format[i] == 'f' || format[i] == 'd' || format[i] == 's')) {
+                char specifier[3] = { format[i], '\0', '\0' };
+
+                if (format[i] == 'f') {
+                    return "float";
+                } else if (format[i] == 'd') {
+                    return "int";
+                } else if (format[i] == 's') {
+                    return "char*";
+                }
+
+                if (format[i] == 'l') {
+                    specifier[1] = 'l';
+                    i++; // Skip the second 'l'
+                }
+
+                if (strcmp(specifier, "lf") == 0 || format[i] == 'f') {
+                    return "double";
+                }
+            }
+        }
+
+        i++;
+    }
+
+    return "unknown";
+}
+
 //Encryption
 
 
@@ -571,9 +644,9 @@ FILE *openFile(const char *path, const char *file_name, const char *mode) {
 }
 
 //PRINT TABLE
-#define TABLE_COLUMN(TITLE, STRUCT_PTR, MEMBER_NAME, TYPE_ARG) \
+#define TABLE_COLUMN(TITLE, STRUCT_PTR, MEMBER_NAME, FORMAT_ARG) \
     {TITLE, (void**)&(STRUCT_PTR), sizeof(STRUCT_PTR) / sizeof(STRUCT_PTR[0]), \
-    offsetof(typeof(*(STRUCT_PTR)), MEMBER_NAME), sizeof(STRUCT_PTR[0]), STRINGIFY(TYPE_ARG)}
+    offsetof(typeof(*(STRUCT_PTR)), MEMBER_NAME), sizeof(STRUCT_PTR[0]), FORMAT_ARG}
 
 typedef struct {
     char* header;
@@ -581,7 +654,7 @@ typedef struct {
     size_t content_size;  // Change to 'num_elements'
     size_t offset;
     size_t struct_size;  // Add the size of the structure
-    char* data_type;     // Add the data type of the column
+    char* format;     // Add the data type of the column
 } table;
 
 #define END_TABLE {NULL, NULL, 0, 0, 0, NULL}
@@ -602,7 +675,8 @@ void printTable(table* table) {
     for (int i = 0; i < table->content_size; i++) {
         for (int j = 0; j < num_columns; j++) {
             char buffer[MAX_STRING_LENGTH];
-            convertString((char*)((uintptr_t)table[j].content + table[j].offset) + (i * table[j].struct_size), table[j].data_type, buffer);
+            formatString((char*)((uintptr_t)table[j].content + table[j].offset) + (i * table[j].struct_size), typeFromFormat(table[j].format), buffer, table[j].format);
+            // convertString((char*)((uintptr_t)table[j].content + table[j].offset) + (i * table[j].struct_size), table[j].format, buffer); //this line is killing me
             printf("%s\t", buffer);
         }
         printf("\n");
