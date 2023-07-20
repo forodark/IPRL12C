@@ -9,6 +9,14 @@
 // This is my header file containing a bunch of useful functions that I made to make my life easier. The features
 // available aren't limited to encryption though. Please explore the file to learn more.
 //==================================================================================================================
+// Latest Changes (0.6c)
+//  - Design overhaul
+//  - Added descriptions
+//  - Added examples
+//  - Reorganized code
+// Upcoming Changes
+//  - showForm
+//==================================================================================================================
 
 #ifndef GLENCRYPT_H
 #define GLENCRYPT_H
@@ -45,15 +53,14 @@
 
 //==================================================================================================================
 // Function Prototypes (structure based are commented out)
-
 void printLine(int type);
 void printLineWidth(int width);
-void printColor(int textColor, const char* format, ...);
+void printColor(int text_color, const char* format, ...);
 void printCentered(const char *str, int field_width);
 int getCharPos(char* str, char ch);
 void waitEnter();
 void invalidChoice();
-void invalidChoiceCustom(char* message, int width);
+void invalidCustom(char* message, int width);
 void exitProgram();
 void convertString(void* data, char* type, char* str);
 void formatString(void* data, char* type, char* str, char* format);
@@ -78,8 +85,11 @@ FILE *openFile(const char *path, const char *file_name, const char *mode);
 
 //==================================================================================================================
 // General Macros
-#define STRINGIFY(x) #x
 
+// Sample: stringify(123); | Result: "123"
+#define stringify(x) #x
+
+// Sample: getDataType(name); | Result: "char*"
 #define getDataType(x) _Generic((x), \
     int:     "int", \
     float:   "float", \
@@ -94,15 +104,17 @@ FILE *openFile(const char *path, const char *file_name, const char *mode);
 
 //==================================================================================================================
 // Print Line Functions
+
+// Sample: printLine(0);
 void printLine(int type) { //print lines in different styles
 	switch(type) {
-		case 0: //normal
+		case 0: //normal (length: 33)
 			printf("---------------------------------\n");
 			break;
 		case 1: //fancy
 			printf("->->-~-~-~-=-=-=-=-=-=-~-~-~-<-<-\n");
 			break;
-		case 2: //long
+		case 2: //long (length: 66)
 			printf("------------------------------------------------------------------\n");
 			break;
 		default:
@@ -111,6 +123,7 @@ void printLine(int type) { //print lines in different styles
 	}
 }
 
+// Sample: printLineWidth(10); 
 void printLineWidth(int width) { //print line with custom width
     for (int i = 0; i < width; i++) {
         printf("-");
@@ -129,18 +142,19 @@ void printLineWidth(int width) { //print line with custom width
 #define CYAN FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY
 #define WHITE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY
 
-void printColor(int textColor, const char* format, ...) //printf in color
+// Sample: printColor(RED, "Error %d", number);
+void printColor(int text_color, const char* format, ...) //printf in color
 {
     // Get the current console handle
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    HANDLE h_console = GetStdHandle(STD_OUTPUT_HANDLE);
 
     // Store the current console attributes
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    WORD originalAttrs = consoleInfo.wAttributes;
+    CONSOLE_SCREEN_BUFFER_INFO console_info;
+    GetConsoleScreenBufferInfo(h_console, &console_info);
+    WORD original_attr = console_info.wAttributes;
 
     // Set the text color
-    SetConsoleTextAttribute(hConsole, textColor);
+    SetConsoleTextAttribute(h_console, text_color);
     
     // Print the formatted text
     va_list args;
@@ -149,9 +163,10 @@ void printColor(int textColor, const char* format, ...) //printf in color
     va_end(args);
     
     // Reset the color
-    SetConsoleTextAttribute(hConsole, originalAttrs);
+    SetConsoleTextAttribute(h_console, original_attr);
 }
 
+// Sample: printCentered("Hello", 15); | Result: "     Hello     "
 void printCentered(const char *str, int field_width) {
     int str_length = strlen(str);
     int padding = (field_width - str_length) / 2;
@@ -161,7 +176,8 @@ void printCentered(const char *str, int field_width) {
 //==================================================================================================================
 // Miscelaneous Functions
 
-int getCharPos(char* str, char ch) { //locates the position of a character in a string
+// Sample: getCharPos("Hello", 'e'); | Result: 1
+int getCharPos(char* str, char ch) { //locates the first position of a character in a string
     char* pos = strchr(str, ch);
     if (pos == NULL) {
         return -1;
@@ -170,6 +186,7 @@ int getCharPos(char* str, char ch) { //locates the position of a character in a 
         return (int)(pos - str);
     }
 }
+
 void waitEnter() { //waits for user to press enter
     printf("Press Enter to continue...");
     fflush(stdout);  
@@ -185,7 +202,8 @@ void invalidChoice() { //returns invalid choice
     waitEnter();
 }
 
-void invalidChoiceCustom(char* message, int width) { //returns invalid choice
+// Sample: invalidCustom("Invalid choice", 10);
+void invalidCustom(char* message, int width) { //returns invalid choice
     printColor(RED, message);
     printLineWidth(width);
     waitEnter();
@@ -193,13 +211,25 @@ void invalidChoiceCustom(char* message, int width) { //returns invalid choice
 
 void exitProgram() { //exits program
 	system("cls");
+    printLine(0);
 	printf("Exiting Program...\n");
+    printLine(0);
+	exit(0);	
+}
+
+// Sample: exitCustom("Exiting... Goodbye!", 20);
+void exitCustom(char* message, int width) { //exits program
+	system("cls");
+    printLineWidth(width);
+	printf(message);
+    printLineWidth(width);
 	exit(0);	
 }
 
 //==================================================================================================================
 // Data Type & String Formatting Functions
 
+// Sample: convertString(100, "int", output); | Result: "100"
 void convertString(void* data, char* type, char* str) { //convert any datatype to string
     if (data == NULL) {
         strcpy(str, "NULL");
@@ -216,6 +246,7 @@ void convertString(void* data, char* type, char* str) { //convert any datatype t
     }
 }
 
+// Sample: formatString(100, "float", output, "%.2f"); | Result: "100.00"
 void formatString(void* data, char* type, char* str, char* format) { //convert any datatype to string
     if (data == NULL) {
         strcpy(str, "NULL");
@@ -232,6 +263,7 @@ void formatString(void* data, char* type, char* str, char* format) { //convert a
     }
 }
 
+// Sample: typeFromFormat("%s"); | Result: "char*"
 char* typeFromFormat(char* format) {
     int length = strlen(format);
     int i = 0;
@@ -239,31 +271,25 @@ char* typeFromFormat(char* format) {
     while (i < length) {
         if (format[i] == '%') {
             i++; // Skip the '%'
-
             // Skip flags and width field
             while (i < length && (format[i] == '-' || format[i] == '+' || format[i] == ' ' || format[i] == '0' || format[i] == '#' || format[i] == '*')) {
                 i++;
             }
-
             // Skip width field (numeric characters)
             while (i < length && format[i] >= '0' && format[i] <= '9') {
                 i++;
             }
-
             // Check if there is a precision specifier
             if (format[i] == '.') {
                 i++; // Skip the '.'
-
                 // Skip precision field (numeric characters)
                 while (i < length && format[i] >= '0' && format[i] <= '9') {
                     i++;
                 }
             }
-
             // Check for format specifier characters (e.g., "lf", "f", "d", "s")
             if (i < length && (format[i] == 'l' || format[i] == 'f' || format[i] == 'd' || format[i] == 's')) {
                 char specifier[3] = { format[i], '\0', '\0' };
-
                 if (format[i] == 'f') {
                     return "float";
                 } else if (format[i] == 'd') {
@@ -271,37 +297,32 @@ char* typeFromFormat(char* format) {
                 } else if (format[i] == 's') {
                     return "char*";
                 }
-
                 if (format[i] == 'l') {
                     specifier[1] = 'l';
                     i++; // Skip the second 'l'
                 }
-
                 if (strcmp(specifier, "lf") == 0 || format[i] == 'f') {
                     return "double";
                 }
             }
         }
-
         i++;
     }
-
     return "unknown";
 }
 
-int extractNumber(const char *str) {
+// Sample: extractNumber("abc123.45"); | Result: 123
+int extractNumber(const char *str) { // Extracts the first iteration of integers from a string
     // Skip leading whitespaces and non-digit characters
     while (*str && !isdigit(*str)) {
         str++;
     }
-
     // Extract the numeric part (integral part only)
     int result = 0;
     while (*str && isdigit(*str)) {
         result = result * 10 + (*str - '0');
         str++;
     }
-
     return result; // Return the extracted number
 }
 
@@ -309,6 +330,7 @@ int extractNumber(const char *str) {
 //==================================================================================================================
 // Cryptography Functions (glencrypt)
 
+// Sample: keyEncrypt("Hello", "testkey"); | Result: "+sNOI"
 const char* keyEncrypt(char input[], char key[]) { //custom encryption algorithm that takes a key
     static char output[MAX_STRING_LENGTH];
     int converted_input[MAX_STRING_LENGTH];
@@ -335,6 +357,7 @@ const char* keyEncrypt(char input[], char key[]) { //custom encryption algorithm
     return output;
 }
 
+// Sample: keyDecrypt("+sNOI", "testkey"); | Result: "Hello"
 const char* keyDecrypt(char input[], char key[]) { //custom decryption algorithm that takes a key
     static char output[MAX_STRING_LENGTH];
     int converted_input[MAX_STRING_LENGTH];
@@ -361,15 +384,17 @@ const char* keyDecrypt(char input[], char key[]) { //custom decryption algorithm
     return output;
 }
 
-
+// Sample: encrypt("Hello"); | Result: "E$E8n"
 const char* encrypt(char input[]) { //encrypt using default key
     return keyEncrypt(input, DEFAULTKEY);
 }
 
+// Sample: decrypt("E$E8n"); | Result: "Hello"
 const char* decrypt(char input[]) { //decrypt using default key
     return keyDecrypt(input, DEFAULTKEY);
 }
 
+// Sample: generateKey(10); | Result: "**********" (10 character random key)
 char* generateKey(int length) { //generates a random key
     static int initialized = 0;
     static char key[MAX_KEY_LENGTH];
@@ -386,9 +411,13 @@ char* generateKey(int length) { //generates a random key
 
 //==================================================================================================================
 // Check Functions
+
+// Sample: IsNumericChar('a'); | Result: 0
 int isNumericChar(char ch) { //check if numeric char or , - +
     return isdigit(ch) || ch == '.' || ch == '-' || ch == '+';
 }
+
+// Sample: isEmpty(""); | Result: 1
 int isEmpty(const char *input) { //check if string is empty
     size_t len = strlen(input);
     for (size_t i = 0; i < len; i++) {
@@ -404,7 +433,7 @@ int isEmpty(const char *input) { //check if string is empty
 
 // Sample: input(int, "Enter int: ", &output);
 // Sample: input(double, "Enter double: ", &output);
-#define input(datatype, prompt, output) input_impl(STRINGIFY(datatype), prompt, output)
+#define input(datatype, prompt, output) input_impl(stringify(datatype), prompt, output)
 void input_impl(char* datatype, char *prompt, void* output) { //input variable of specified datatype
     if (!strcmp(datatype, "int") || !strcmp(datatype, "Int")) {
         while(1) {
@@ -786,6 +815,9 @@ void showPageMenu(char *title, page_menu* page) { //menu with page support
 
 //==================================================================================================================
 // File Processing
+
+// Sample: openFile("bin/", "accounts.dat", "rb");
+// Note: dont forget to fclose()
 FILE *openFile(const char *path, const char *file_name, const char *mode) {
     char file_path[MAX_STRING_LENGTH];
     snprintf(file_path, sizeof(file_path), "%s%s", path, file_name);
@@ -925,7 +957,7 @@ void printTable(char* title, table* table) {
                     break;
                 }
                 else {
-                    invalidChoiceCustom("Invalid choice.", table_width);
+                    invalidCustom("Invalid choice.", table_width);
                     continue;
                 }
                 
@@ -936,7 +968,7 @@ void printTable(char* title, table* table) {
                     break;
                 }
                 else {
-                    invalidChoiceCustom("Invalid choice.", table_width);
+                    invalidCustom("Invalid choice.", table_width);
                     continue;
                 }
             case 0:
@@ -944,7 +976,7 @@ void printTable(char* title, table* table) {
                 return;
                 break;
             default:
-                invalidChoiceCustom("Invalid choice.", table_width);
+                invalidCustom("Invalid choice.", table_width);
                 continue; 
         }
     }
