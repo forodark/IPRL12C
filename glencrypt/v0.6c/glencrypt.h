@@ -502,7 +502,7 @@ void input_impl(char* datatype, char *prompt, void* output) { //input variable o
         }
     }
 
-    else if (!strcmp(datatype, "string") || !strcmp(datatype, "char*") || !strcmp(datatype, "Str")) { // string
+    else if (!strcmp(datatype, "str") || !strcmp(datatype, "char*") || !strcmp(datatype, "Str")) { // string
         while(1) {
             printf("%s", prompt);
             char buffer[MAX_STRING_LENGTH];
