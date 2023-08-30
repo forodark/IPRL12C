@@ -994,25 +994,14 @@ printTableFull("Test Table", test);
 
 //==================================================================================================================
 // Form Functions
-#define FORM_FIELD(TITLE, STRUCT_PTR, MEMBER_NAME, FORMAT_ARG) \
-    {TITLE, (void**)&(STRUCT_PTR), sizeof(STRUCT_PTR) / sizeof(STRUCT_PTR[0]), \
-    offsetof(typeof(*(STRUCT_PTR)), MEMBER_NAME), sizeof(STRUCT_PTR[0]), FORMAT_ARG}
 
-typedef struct {
-    char* field_prompt;
-    void** content;
-    size_t content_size;  // Change to 'num_elements'
-    size_t offset;
-    size_t struct_size;  // Add the size of the structure
-    char* format;     // Add the data type of the column
-} form;
-
-#define END_FORM {NULL, NULL, 0, 0, 0, NULL}
 #define FORM_WIDTH 33
 
-void showForm(char* title, form* form) {
+size_t test_size;
+
+void inputForm(char* title, table* table) {
     int num_fields = 0;
-    while (form[num_fields].field_prompt != NULL) {
+    while (table[num_fields].header != NULL) {
         num_fields++;
     }
 
@@ -1024,16 +1013,25 @@ void showForm(char* title, form* form) {
     
     // Print field prompts
     
-    
-    for (int i = 0; i < num_fields; i++) {
-        printf("%s", form[i].field_prompt);
-        
-        char *field_datatype = typeFromFormat(form[i].format);
-        // printf("%d", form->content_size);
-        input_impl(field_datatype, "", (char*)((uintptr_t)form[i].content + form[i].offset) + (form->content_size * form[i].struct_size));
+
+
+    if (test_size == NULL) {
+        test_size = table->content_size;
     }
-    form->content_size++;
-    
+
+    printf("Size: %zu\n", test_size);
+
+    for (int i = 0; i < num_fields; i++) {
+        printf("Enter %s: ", table[i].header);
+        
+        char *field_datatype = typeFromFormat(table[i].format);
+
+        input_impl(field_datatype, "", (char*)((uintptr_t)table[i].content + table[i].offset) + (test_size * table[i].struct_size));
+    }
+    test_size++;
+
+    printf("Size: %zu\n", test_size);
+
     printf("\n");
 
 }
